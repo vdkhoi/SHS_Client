@@ -15,25 +15,27 @@ public class Demo {
         String firstTime = "2000-01-01";
         String lastTime = "2013-01-15";
         //String leader = "master03.ib";
-        String leader = "DESKTOP-IKH61D8";
+        String broker = "DESKTOP-IKH61D8";  // machine to run broker
+        String leader = "DESKTOP-R1US14S";  // machine to run leader server
         //String storeID = "a2076350e64b4aa89eb75449ed263117";
-        String storeID = "9b41b01ab89742e6816d72d3fd03508b";
+        String storeID = "80d2b061d2aa42c5a32a67c1a7559790";
 
-        if (agrs.length == 2) {
-            leader = agrs[0];
-            storeID = agrs[1];
+        if (agrs.length == 3) {
+            broker = agrs[0];
+            leader = agrs[1];
+            storeID = agrs[2];
         }
         
         System.out.println("Start connection...");
-        SHS_Client client = new SHS_Client(leader, storeID, Boolean.TRUE);
+        SHS_Client client = new SHS_Client(broker, leader, storeID, Boolean.TRUE);
         
-        System.out.println("UrlToUid: " + sample[0]);
-        long uid = client.ClientUrlToUid(sample[0]);
-        System.out.println("UrlToUid=" + uid);
-        
-        System.out.println("UidToUrl: " + uid);
-        String url = client.ClientUidToUrl(uid);
-        System.out.println("UidToUrl=" + url);
+//        System.out.println("UrlToUid: " + sample[0]);
+//        long uid = client.ClientUrlToUid(sample[0]);
+//        System.out.println("UrlToUid=" + uid);
+//        
+//        System.out.println("UidToUrl: " + uid);
+//        String url = client.ClientUidToUrl(uid);
+//        System.out.println("UidToUrl=" + url);
       
 //        System.out.println("WebGetTemporalPageLinks: ");
 //        String[] urls = client.WebGetTemporalPageLinks(sample[0], firstTime, lastTime, SHS_Client.FORWARD);
@@ -80,20 +82,34 @@ public class Demo {
 //        }
 //        System.out.println("WebBatchGetTemporalLinks");
         
-        uid = client.ClientUrlToUid("bild.de/");
-        System.out.println("UID = " + uid);
-        System.out.println("WebBatchGetTemporalPageLinks...");
-        long[][] outLinks = client.ClientGetAllCaptures(uid, SHS_Client.FORWARD);
-        System.out.println("Found " + outLinks.length + " links ");
-        for (int i = 0; i < outLinks.length; i++) {
-            
-            System.out.print("Time: " + client.ClientConvertDateFromNum((int)outLinks[i][0]) + "\t");
-            for (int j = 1; j < outLinks[i].length; j++) {
-                System.out.print(outLinks[i][j] + " ");
-            }
-            System.out.println();
-        }
+//        uid = client.ClientUrlToUid("bild.de/");
+//        System.out.println("UID = " + uid);
+//        System.out.println("WebBatchGetTemporalPageLinks...");
+//        long[][] outLinks = client.ClientGetAllCaptures(uid, SHS_Client.FORWARD);
+//        System.out.println("Found " + outLinks.length + " links ");
+//        for (int i = 0; i < outLinks.length; i++) {
+//            
+//            System.out.print("Time: " + client.ClientConvertDateFromNum((int)outLinks[i][0]) + "\t");
+//            for (int j = 1; j < outLinks[i].length; j++) {
+//                System.out.print(outLinks[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
         
-        System.out.println("WebBatchGetTemporalPageLinks.");
+//        System.out.println("WebBatchGetTemporalPageLinks.");
+        
+        Long[] uids = client.ClientAllUids();
+        for (Long u: uids) {
+            if (u % 10000 == 0) {
+                System.out.println("Capture of uid = " + u);
+                long [][] captures = client.ClientGetAllCaptures(u, SHS_Client.FORWARD);
+                for (int i = 0; i < captures.length; i ++) {
+                    for(int j = 0; j < captures[i].length; j++) {
+                        System.out.print("\t" + captures[i][j]);
+                    }
+                    System.out.println();
+                }
+            }
+        }
     }
 }

@@ -21,4 +21,5 @@ public class OpCodes {
     public static final int ClientBatchUidToUrl = 0xf1000049;
     public static final int ClientGetAllCaptures = 0xf1000050;
     public static final int ClientBatchGetAllCaptures = 0xf1000051;
+    public static final int ClientGetAllUids = 0xf1000054;
 }

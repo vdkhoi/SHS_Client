@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package Library;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import org.joda.time.*;
 /**
  *
@@ -18,13 +17,15 @@ public class SHS_Client {
     public static final int BACKWARD = 1;
     public Channel channel;
     public String leader;
+    public String broker;
     public String storeID;
     private DateTime startPoint = new DateTime("1998-01-01");
     
-    public SHS_Client(String leader, String storeID, Boolean revert){
+    public SHS_Client(String broker, String leader, String storeID, Boolean revert){
+        this.broker = broker;
         this.leader = leader;
         this.storeID = storeID;
-        channel = new Channel(leader, PORT);
+        channel = new Channel(this.broker, PORT);
         channel.needRevert = true;
     }
     
@@ -184,5 +185,21 @@ public class SHS_Client {
             urls[i] = channel.ReadString();
         }
         return urls;
+    }
+    
+    public Long[] ClientAllUids() {
+        channel.WriteUInt32(OpCodes.ClientGetAllUids);
+        channel.WriteString(leader);
+        channel.WriteString(storeID);
+        channel.Flush();        
+        ArrayList<Long> uids = new ArrayList<Long>() ;
+        long uid = channel.ReadInt64();
+        while (uid >= 0) {
+            uids.add(uid);
+            uid = channel.ReadInt64();
+        }
+        Long[] result = new Long[uids.size()];
+        result = uids.toArray(result);
+        return result;
     }
 }
