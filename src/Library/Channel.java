@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Library;
 
 import java.io.IOException;
@@ -15,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author vdkhoi
  */
 public class Channel {
@@ -117,7 +111,7 @@ public class Channel {
             return val;
         }
     }
-    
+
     public void WriteInt64(long x) {
         this.serBuf = this.serBuf.putLong(x);
         RevertBuffer(serBuf, 0, 8);
@@ -252,10 +246,8 @@ public class Channel {
             this.socket.socket().shutdownInput();
             this.socket.socket().shutdownOutput();
             this.socket.socket().close();
-        } catch (SocketException se) {
+        } catch (IOException se) {
             Logger.getLogger(Channel.class.getName()).log(Level.SEVERE, null, se);
-        } catch (IOException ie) {
-            Logger.getLogger(Channel.class.getName()).log(Level.SEVERE, null, ie);
         }
         this.socket = null;
     }
